@@ -43,6 +43,16 @@
     }
 </div>
 
+@if (ViewBag.NoResults)
+{
+    <script>
+        window.onload = function() {
+            // Simple alert; replace with more sophisticated notification if needed
+            alert("No results found for your query.");
+        };
+    </script>
+}
+
 @if (ViewBag.CurrentPage < ViewBag.TotalPages)
 {
     <button id="loadMore">Show More</button>
