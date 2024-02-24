@@ -1,3 +1,4 @@
+@using MyMvcApp.Helpers
 @model IEnumerable<MyMvcApp.Models.Post>
 
 <h1>Search Posts</h1>
@@ -10,11 +11,13 @@
 <div id="postsList">
     @if (Model != null && Model.Any())
     {
-        @foreach (var post in Model)
+        foreach (var post in Model)
         {
             <div class="post-box" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
                 <div class="post-title" style="font-weight: bold;">@post.Title</div>
-                <div class="post-body" style="font-weight: normal;">@Html.Raw(post.Body)</div>
+                <div class="post-body" style="font-weight: normal;">
+                    @Html.Raw(post.Body.StripHtmlAndTruncate(140))
+                </div>
             </div>
         }
     }
@@ -31,26 +34,38 @@
 
 @section Scripts {
     <script>
-        var currentPage = @ViewBag.CurrentPage;
-        var totalPages = @ViewBag.TotalPages;
+        // Ensure your JavaScript function for stripping HTML and truncating is defined here or included from an external JS file
 
         document.getElementById("loadMore").addEventListener("click", function() {
-            currentPage++;
+            var currentPage = @ViewBag.CurrentPage + 1;
+            var totalPages = @ViewBag.TotalPages;
+            var query = '@ViewBag.Query';
+
             if (currentPage <= totalPages) {
-                fetch(`/Post/Index?page=${currentPage}`)
+                var encodedQuery = encodeURIComponent(query);
+                fetch(`/Search/Index?query=${encodedQuery}&page=${currentPage}`)
                     .then(response => response.text())
                     .then(html => {
                         var parser = new DOMParser();
                         var doc = parser.parseFromString(html, 'text/html');
-                        var posts = doc.getElementById("postsList").innerHTML;
-                        document.getElementById("postsList").innerHTML += posts;
-                        if (currentPage == totalPages) {
+                        var newPostsHtml = doc.querySelectorAll(".post-box");
+                        newPostsHtml.forEach(function(element) {
+                            var bodyElement = element.querySelector(".post-body");
+                            var text = bodyElement.textContent || bodyElement.innerText;
+                            bodyElement.textContent = stripHtmlAndTruncate(text, 140); // Use the JS function to strip and truncate
+                            document.getElementById("postsList").appendChild(element);
+                        });
+
+                        if (currentPage >= totalPages) {
                             document.getElementById("loadMore").style.display = 'none';
                         }
                     });
-            } else {
-                this.style.display = 'none'; // Hide the button if there are no more posts to load
             }
         });
+
+        function stripHtmlAndTruncate(html, length) {
+            var text = html.replace(/<[^>]*>/g, ''); // Strip HTML tags
+            return text.length <= length ? text : text.substr(0, length) + "...";
+        }
     </script>
 }
