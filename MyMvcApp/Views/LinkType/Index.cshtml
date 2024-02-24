@@ -1,0 +1,17 @@
+@model List<MyMvcApp.Models.LinkType>
+
+<h1>Link Types</h1>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Type</th>
+    </tr>
+    @foreach (var linkType in Model)
+    {
+        <tr>
+            <td>@linkType.Id</td>
+            <td>@linkType.Type</td>
+        </tr>
+    }
+</table>

@@ -1,0 +1,29 @@
+@model IEnumerable<MyMvcApp.Models.Post>
+
+<h1>Search Posts</h1>
+
+<form method="get">
+    <input type="text" name="query" />
+    <button type="submit">Search</button>
+</form>
+
+@if (Model != null && Model.Any())
+{
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Body</th>
+        </tr>
+        @foreach (var post in Model)
+        {
+            <tr>
+                <td>@post.Title</td>
+                <td>@post.Body</td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>No results found.</p>
+}
