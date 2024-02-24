@@ -1,6 +1,5 @@
 @using MyMvcApp.Helpers
-@model IEnumerable<MyMvcApp.Models.Post>
-
+@model IEnumerable<MyMvcApp.Models.ViewModels.PostViewModel>
 <h1>Search Posts</h1>
 
 <form method="get" id="searchForm">
@@ -11,13 +10,30 @@
 <div id="postsList">
     @if (Model != null && Model.Any())
     {
-        foreach (var post in Model)
+        foreach (var item in Model)
         {
             <div class="post-box" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
-                <div class="post-title" style="font-weight: bold;">@post.Title</div>
+                <div class="post-title" style="font-weight: bold;">@item.Post.Title</div>
                 <div class="post-body" style="font-weight: normal;">
-                    @Html.Raw(post.Body.StripHtmlAndTruncate(140))
+                    @Html.Raw(item.Post.Body.StripHtmlAndTruncate(140))
                 </div>
+                <br>
+                <div class="post-count"><strong>Votes: </strong>@item.Post.Score</div>
+                <div class="post-answers">Answers: @item.Post.Score</div>
+                <div class="post-owner">Posted By: @item.DisplayName</div>
+                <div class="rep">Poster Reputation: @item.ReputationScore</div>
+                <div class="post-badges">
+                    Badges: 
+                    @if (item.Badges.Any())
+                    {
+                        @string.Join(", ", item.Badges)
+                    }
+                    else
+                    {
+                        <text>None</text>
+                    }
+                </div>
+
             </div>
         }
     }

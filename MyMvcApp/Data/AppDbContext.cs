@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MyMvcApp.Models;
+using System.Collections.Generic;
 
 namespace MyMvcApp.Data
 {
@@ -11,6 +12,8 @@ namespace MyMvcApp.Data
 
         public DbSet<LinkType> LinkTypes { get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<Users> Users { get; set; }
 
+        public DbSet<Badges> Badges { get; set; }
     }
 }
