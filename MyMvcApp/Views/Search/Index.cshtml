@@ -2,28 +2,55 @@
 
 <h1>Search Posts</h1>
 
-<form method="get">
-    <input type="text" name="query" />
+<form method="get" id="searchForm">
+    <input type="text" name="query" value="@ViewBag.Query" />
     <button type="submit">Search</button>
 </form>
 
-@if (Model != null && Model.Any())
-{
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>Body</th>
-        </tr>
+<div id="postsList">
+    @if (Model != null && Model.Any())
+    {
         @foreach (var post in Model)
         {
-            <tr>
-                <td>@post.Title</td>
-                <td>@post.Body</td>
-            </tr>
+            <div class="post-box" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+                <div class="post-title" style="font-weight: bold;">@post.Title</div>
+                <div class="post-body" style="font-weight: normal;">@Html.Raw(post.Body)</div>
+            </div>
         }
-    </table>
-}
-else
+    }
+    else
+    {
+        <p>No results found.</p>
+    }
+</div>
+
+@if (ViewBag.CurrentPage < ViewBag.TotalPages)
 {
-    <p>No results found.</p>
+    <button id="loadMore">Show More</button>
+}
+
+@section Scripts {
+    <script>
+        var currentPage = @ViewBag.CurrentPage;
+        var totalPages = @ViewBag.TotalPages;
+
+        document.getElementById("loadMore").addEventListener("click", function() {
+            currentPage++;
+            if (currentPage <= totalPages) {
+                fetch(`/Post/Index?page=${currentPage}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        var parser = new DOMParser();
+                        var doc = parser.parseFromString(html, 'text/html');
+                        var posts = doc.getElementById("postsList").innerHTML;
+                        document.getElementById("postsList").innerHTML += posts;
+                        if (currentPage == totalPages) {
+                            document.getElementById("loadMore").style.display = 'none';
+                        }
+                    });
+            } else {
+                this.style.display = 'none'; // Hide the button if there are no more posts to load
+            }
+        });
+    </script>
 }

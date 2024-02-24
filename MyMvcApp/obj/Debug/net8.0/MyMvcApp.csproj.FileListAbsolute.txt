@@ -68,3 +68,4 @@
 /Users/anupamkhargharia/Downloads/24assess/assn/MyMvcApp/obj/Debug/net8.0/MyMvcApp.pdb
 /Users/anupamkhargharia/Downloads/24assess/assn/MyMvcApp/obj/Debug/net8.0/MyMvcApp.genruntimeconfig.cache
 /Users/anupamkhargharia/Downloads/24assess/assn/MyMvcApp/obj/Debug/net8.0/ref/MyMvcApp.dll
+/Users/anupamkhargharia/Downloads/24assess/assn/MyMvcApp/obj/Debug/net8.0/MyMvcApp.sourcelink.json
