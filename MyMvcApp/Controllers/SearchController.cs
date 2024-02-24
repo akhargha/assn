@@ -36,6 +36,19 @@ public IActionResult Index(string query, int page = 1)
             Badges = new List<string>() // Initialize with an empty list; we'll fill it next
         }).ToList();
 
+    // Separately fill in the badges for each post's owner
+        foreach (var viewModel in postViewModels)
+        {
+            if (viewModel.Post?.OwnerUserId != null)
+            {
+                var badges = _context.Badges
+                    .Where(b => b.UserId == viewModel.Post.OwnerUserId)
+                    .Select(b => b.Name)
+                    .ToList();
+                viewModel.Badges = badges;
+            }
+        }
+
     // After fetching the posts
     ViewBag.NoResults = !postViewModels.Any();
 
